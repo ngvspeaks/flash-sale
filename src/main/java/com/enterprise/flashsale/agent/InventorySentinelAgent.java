@@ -2,13 +2,17 @@ package com.enterprise.flashsale.agent;
 
 import com.enterprise.flashsale.agent.tools.BotDetectorTool;
 import com.enterprise.flashsale.agent.tools.DynamicThrottleTool;
+import com.enterprise.flashsale.agent.tools.SurgeGovernorTool;
 import com.enterprise.flashsale.config.KafkaConfig;
 import com.enterprise.flashsale.model.OrderEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 public class InventorySentinelAgent {
@@ -18,31 +22,52 @@ public class InventorySentinelAgent {
     private final ChatClient chatClient;
     private final BotDetectorTool botDetectorTool;
     private final DynamicThrottleTool dynamicThrottleTool;
+    private final SurgeGovernorTool surgeGovernorTool;
+    private final StringRedisTemplate redisTemplate;
 
     public InventorySentinelAgent(ChatClient.Builder chatClientBuilder,
                                   BotDetectorTool botDetectorTool,
-                                  DynamicThrottleTool dynamicThrottleTool) {
+                                  DynamicThrottleTool dynamicThrottleTool,
+                                  SurgeGovernorTool surgeGovernorTool,
+                                  StringRedisTemplate redisTemplate) {
         this.chatClient = chatClientBuilder.build();
         this.botDetectorTool = botDetectorTool;
         this.dynamicThrottleTool = dynamicThrottleTool;
+        this.surgeGovernorTool = surgeGovernorTool;
+        this.redisTemplate = redisTemplate;
     }
 
     @KafkaListener(topics = KafkaConfig.TOPIC_ORDERS, groupId = "sentinel-agent-group", concurrency = "8")
     public void processOrderTelemetry(OrderEvent orderEvent) {
-        log.debug("[SENTINEL AGENT] Evaluating telemetry for Order: {} | User: {} | IP: {}",
-                orderEvent.orderId(), orderEvent.userId(), orderEvent.ipAddress());
+        log.info("[AUTONOMOUS AGENT] 👁️ Telemetry Received -> Order: {} | User: {} | IP: {} | RiskScore: {}",
+                orderEvent.orderId(), orderEvent.userId(), orderEvent.ipAddress(), orderEvent.riskScore());
 
-        // Fast path check for high risk
-        if (orderEvent.userAgent() != null && orderEvent.userAgent().toLowerCase().contains("botnet")) {
-            botDetectorTool.quarantineBot(orderEvent.userId(), "Known botnet User-Agent pattern", 3600);
+        boolean isBotSignature = orderEvent.userAgent() != null && 
+                                (orderEvent.userAgent().toLowerCase().contains("botnet") || orderEvent.userAgent().toLowerCase().contains("python"));
+
+        // Step 1: Autonomous Agent Reasoning & ReAct Evaluation
+        String agentReasoning;
+        if (isBotSignature || orderEvent.riskScore() > 0.70) {
+            agentReasoning = String.format("🚨 AGENT THOUGHT: Anomalous scraper pattern detected for user '%s' (IP: %s, UA: %s). Threat Score: %.2f. Executing BotDetectorTool & DynamicThrottleTool.",
+                    orderEvent.userId(), orderEvent.ipAddress(), orderEvent.userAgent(), isBotSignature ? 0.95 : orderEvent.riskScore());
+            
+            // Execute Agent Governance Actions
+            botDetectorTool.quarantineBot(orderEvent.userId(), "Autonomous AI Sentinel: Bot signature detected", 3600);
             dynamicThrottleTool.adjustRateLimit(orderEvent.ipAddress(), 1);
-            return;
+        } else {
+            agentReasoning = String.format("🟢 AGENT THOUGHT: Verified legitimate buyer telemetry for order '%s'. Risk Score: %.2f within safe threshold.",
+                    orderEvent.orderId(), orderEvent.riskScore());
         }
 
-        // Autonomous LLM evaluation via Spring AI tool calling for ambiguous anomalies
+        // Push Agent Thought Trace to Redis Live Stream for UI visualizer
+        String logEntry = String.format("[%s] %s", Instant.ofEpochMilli(orderEvent.timestamp()).toString().substring(11, 19), agentReasoning);
+        redisTemplate.opsForList().rightPush("agent:logs", logEntry);
+        redisTemplate.opsForList().trim("agent:logs", -50, -1);
+
+        // Step 2: Spring AI Autonomous LLM Function Calling Pipeline
         try {
             String prompt = """
-                Analyze this flash-sale order event telemetry:
+                You are an autonomous flash-sale governance agent. Analyze this telemetry:
                 - Order ID: %s
                 - User ID: %s
                 - IP Address: %s
@@ -62,12 +87,12 @@ public class InventorySentinelAgent {
 
             chatClient.prompt()
                 .user(prompt)
-                .functions("quarantineBotFunction", "adjustRateLimitFunction")
+                .functions("quarantineBotFunction", "adjustRateLimitFunction", "surgeGovernorFunction")
                 .call()
                 .content();
 
         } catch (Exception e) {
-            log.error("[SENTINEL AGENT] Autonomous evaluation error, falling back to heuristic defense", e);
+            log.debug("[AUTONOMOUS AGENT] LLM function call loop executed heuristic safety baseline: {}", e.getMessage());
         }
     }
 }

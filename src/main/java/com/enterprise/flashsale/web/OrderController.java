@@ -122,6 +122,12 @@ public class OrderController {
         ));
     }
 
+    @GetMapping("/agent/logs")
+    public ResponseEntity<java.util.List<String>> getAgentLogs() {
+        java.util.List<String> logs = redisTemplate.opsForList().range("agent:logs", 0, -1);
+        return ResponseEntity.ok(logs != null ? logs : java.util.List.of());
+    }
+
     public record ReserveRequest(String skuId, String userId, int quantity) {}
     public record ResetRequest(String skuId, int stock) {}
 }

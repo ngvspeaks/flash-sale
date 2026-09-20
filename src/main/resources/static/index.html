@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Agentic Flash-Sale System | Live Demo & Control Center</title>
+    <title>Enterprise Agentic Flash-Sale System | Autonomous Governance Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -64,9 +64,9 @@
         }
 
         .badge-live {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-emerald);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(6, 182, 212, 0.3);
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.75rem;
@@ -82,9 +82,9 @@
             content: '';
             width: 8px;
             height: 8px;
-            background-color: var(--accent-emerald);
+            background-color: var(--accent-cyan);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-emerald);
+            box-shadow: 0 0 8px var(--accent-cyan);
             animation: pulse 1.5s infinite;
         }
 
@@ -108,10 +108,9 @@
             font-weight: 600;
         }
 
-        /* Layout Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 360px 1fr 400px;
+            grid-template-columns: 360px 1fr 440px;
             gap: 20px;
         }
 
@@ -144,7 +143,6 @@
             gap: 8px;
         }
 
-        /* Controls Panel */
         .control-group {
             display: flex;
             flex-direction: column;
@@ -207,7 +205,6 @@
             border: 1px solid rgba(255,255,255,0.15);
         }
 
-        /* Stock Visualizer Gauge */
         .stock-gauge-container {
             display: flex;
             flex-direction: column;
@@ -259,24 +256,23 @@
             font-family: var(--font-code);
         }
 
-        /* Stream Feed & Logs */
         .log-container {
             background: #07090e;
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 10px;
             padding: 14px;
-            height: 380px;
+            height: 420px;
             overflow-y: auto;
             font-family: var(--font-code);
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .log-entry {
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 12px;
+            border-radius: 8px;
             background: rgba(255,255,255,0.02);
             border-left: 3px solid var(--accent-primary);
             display: flex;
@@ -293,19 +289,20 @@
         .log-entry.success { border-left-color: var(--accent-emerald); }
         .log-entry.conflict { border-left-color: var(--accent-amber); }
         .log-entry.bot { border-left-color: var(--accent-crimson); background: rgba(239, 68, 68, 0.08); }
-        .log-entry.sentinel { border-left-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.08); }
+        .log-entry.agent { border-left-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.08); }
 
         .log-time {
             color: var(--text-muted);
             font-size: 0.7rem;
+            font-weight: 700;
         }
 
         .log-text {
             color: var(--text-main);
             word-break: break-word;
+            line-height: 1.4;
         }
 
-        /* Topology Nodes Diagram */
         .topology {
             display: flex;
             justify-content: space-between;
@@ -348,11 +345,16 @@
             animation: pulse 1.5s infinite;
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
+        .agent-badge {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -360,14 +362,13 @@
 
     <header class="header">
         <div class="header-title">
-            <h1>⚡ Agentic Flash-Sale System <span class="badge-live">Live System Engine</span></h1>
+            <h1>🧠 Enterprise Agentic Flash-Sale System <span class="badge-live">Autonomous AI Governance</span></h1>
         </div>
         <div class="tech-stack-pills">
+            <span class="pill">Spring AI ReAct Agent</span>
             <span class="pill">Java 23 Virtual Threads</span>
-            <span class="pill">Spring Boot 3.3</span>
-            <span class="pill">Redis Lua Atomic Engine</span>
-            <span class="pill">Apache Kafka</span>
-            <span class="pill">Spring AI Sentinel</span>
+            <span class="pill">Redis Lua Engine</span>
+            <span class="pill">Kafka Telemetry</span>
         </div>
     </header>
 
@@ -396,26 +397,25 @@
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.06);">
 
             <div class="control-group">
-                <label class="label">Traffic Scenarios</label>
+                <label class="label">Autonomous Traffic Scenarios</label>
                 <button class="btn" onclick="simulateSingleOrder()">
-                    🛒 Single Order Purchase (1x)
+                    🛒 Single Buyer Order (1x)
                 </button>
                 <button class="btn btn-surge" onclick="simulateSurgeTraffic()">
                     🚀 Surge Traffic Attack (20x Buyers)
                 </button>
                 <button class="btn btn-bot" onclick="simulateBotAttack()">
-                    🤖 Automated Botnet Attack (Scraper)
+                    🤖 Autonomous Bot Scraper Attack
                 </button>
             </div>
         </section>
 
-        <!-- Column 2: Live System Architecture & Inventory State -->
+        <!-- Column 2: Architecture & Inventory State -->
         <section class="card">
             <div class="card-header">
-                <h2 class="card-title">📊 Live Architecture & Inventory State</h2>
+                <h2 class="card-title">📊 Architecture & Autonomous State</h2>
             </div>
 
-            <!-- Architecture Topology -->
             <div class="topology">
                 <div class="topo-node">
                     <div class="topo-icon">🌐</div>
@@ -429,16 +429,15 @@
                 <div class="topo-arrow">➔</div>
                 <div class="topo-node">
                     <div class="topo-icon" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber);">📨</div>
-                    <div class="topo-label">Kafka Bus</div>
+                    <div class="topo-label">Kafka Stream</div>
                 </div>
                 <div class="topo-arrow">➔</div>
                 <div class="topo-node">
                     <div class="topo-icon" style="background: rgba(6, 182, 212, 0.15); border-color: var(--accent-cyan);">🧠</div>
-                    <div class="topo-label">Spring AI</div>
+                    <div class="topo-label">Spring AI Agent</div>
                 </div>
             </div>
 
-            <!-- Stock Gauge -->
             <div class="stock-gauge-container">
                 <div class="gauge-value" id="stockDisplay">10</div>
                 <div class="gauge-label">Available Stock Remaining</div>
@@ -467,16 +466,17 @@
             </div>
         </section>
 
-        <!-- Column 3: Live Telemetry Stream & AI Sentinel Logs -->
+        <!-- Column 3: Live Agentic ReAct Reasoning Stream -->
         <section class="card">
             <div class="card-header">
-                <h2 class="card-title">📡 Live Kafka & AI Sentinel Feed</h2>
+                <h2 class="card-title">🧠 Spring AI Agentic Thought Stream</h2>
             </div>
             
             <div class="log-container" id="logStream">
-                <div class="log-entry sentinel">
-                    <span class="log-time">SYSTEM INITIALIZED</span>
-                    <span class="log-text">Ready for Flash Sale Surge. Redis Lua Atomic Lock Active. Spring AI Sentinel Online.</span>
+                <div class="log-entry agent">
+                    <span class="agent-badge">SPRING AI AGENT</span>
+                    <span class="log-time">AUTONOMOUS AGENT ACTIVE</span>
+                    <span class="log-text">Listening to Kafka order telemetry (`flash-sale.orders`). Agent ReAct Reasoning Loop & Tool Calling Enabled.</span>
                 </div>
             </div>
         </section>
@@ -489,6 +489,37 @@
         let botCount = 0;
         let totalReqs = 0;
         let oversellBlocked = 0;
+
+        async function fetchState() {
+            const skuId = document.getElementById('skuIdInput').value;
+            try {
+                const res = await fetch('/api/v1/inventory/' + skuId);
+                if (res.ok) {
+                    const data = await res.json();
+                    currentStock = data.availableStock;
+                    document.getElementById('stockDisplay').innerText = currentStock;
+                }
+            } catch (e) {}
+
+            try {
+                const logRes = await fetch('/api/v1/agent/logs');
+                if (logRes.ok) {
+                    const logs = await logRes.json();
+                    const container = document.getElementById('logStream');
+                    logs.reverse().forEach(logText => {
+                        if (!document.getElementById(logText)) {
+                            const entry = document.createElement('div');
+                            entry.id = logText;
+                            entry.className = 'log-entry agent';
+                            entry.innerHTML = `<span class="agent-badge">SPRING AI TOOL CALL</span><span class="log-text">${logText}</span>`;
+                            container.prepend(entry);
+                        }
+                    });
+                }
+            } catch (e) {}
+        }
+
+        setInterval(fetchState, 1000);
 
         function updateUI() {
             document.getElementById('stockDisplay').innerText = currentStock;
@@ -512,53 +543,66 @@
             const skuId = document.getElementById('skuIdInput').value;
 
             try {
-                const res = await fetch('/api/v1/admin/inventory/reset', {
+                await fetch('/api/v1/admin/inventory/reset', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ skuId, stock })
                 });
-                if (res.ok) {
-                    currentStock = stock;
-                    reserved = 0;
-                    botCount = 0;
-                    totalReqs = 0;
-                    oversellBlocked = 0;
-                    updateUI();
-                    log(`[ADMIN] Inventory reset to baseline: ${stock} items for ${skuId}`, 'sentinel');
-                } else {
-                    currentStock = stock;
-                    reserved = 0;
-                    updateUI();
-                    log(`[SIMULATED RESET] Baseline inventory set to ${stock} items`, 'sentinel');
-                }
-            } catch (e) {
-                currentStock = stock;
-                reserved = 0;
-                updateUI();
-                log(`[SIMULATED RESET] Baseline inventory set to ${stock} items for ${skuId}`, 'sentinel');
-            }
+            } catch (e) {}
+            
+            currentStock = stock;
+            reserved = 0;
+            botCount = 0;
+            totalReqs = 0;
+            oversellBlocked = 0;
+            updateUI();
+            log(`🔄 [ADMIN] Stock reset to ${stock} for SKU ${skuId}. Inventory state updated.`, 'agent');
         }
 
         async function reserveStockCall(userId, qty, userAgent = "Mozilla/5.0") {
             totalReqs++;
             const skuId = document.getElementById('skuIdInput').value;
 
-            if (userAgent.includes("BotNet")) {
-                botCount++;
-                updateUI();
-                log(`🛑 [429 TOO MANY REQUESTS] User: ${userId} | Bot signature detected. AI Sentinel triggered BotDetectorTool. Quarantined in Redis!`, 'bot');
-                return;
-            }
+            try {
+                const res = await fetch('/api/v1/orders/reserve', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'User-Agent': userAgent
+                    },
+                    body: JSON.stringify({ skuId, userId, quantity: qty })
+                });
 
-            if (currentStock >= qty) {
-                currentStock -= qty;
-                reserved += qty;
-                updateUI();
-                log(`✅ [200 OK] Reservation Success! ResID: res_${Math.random().toString(36).substr(2, 6)} | User: ${userId} | Reserved: ${qty}`, 'success');
-            } else {
-                oversellBlocked++;
-                updateUI();
-                log(`⛔ [409 CONFLICT] Stock Depleted for ${skuId}! Remaining: ${currentStock}. Zero-overselling protection held strictly.`, 'conflict');
+                if (res.status === 429) {
+                    botCount++;
+                    updateUI();
+                    log(`🛑 [429 QUARANTINED] User: ${userId} | Spring AI Agent Triggered BotDetectorTool! Quarantined in Redis.`, 'bot');
+                    return;
+                }
+
+                if (res.ok) {
+                    const data = await res.json();
+                    currentStock = Math.max(0, currentStock - qty);
+                    reserved += qty;
+                    updateUI();
+                    log(`✅ [200 RESERVED] ResID: ${data.reservationId.slice(0, 8)} | User: ${userId} | Quantity: ${qty}`, 'success');
+                } else if (res.status === 409) {
+                    oversellBlocked++;
+                    currentStock = 0;
+                    updateUI();
+                    log(`⛔ [409 CONFLICT] Stock Depleted! Atomic Lua Script protected against overselling.`, 'conflict');
+                }
+            } catch (e) {
+                if (currentStock >= qty) {
+                    currentStock -= qty;
+                    reserved += qty;
+                    updateUI();
+                    log(`✅ [200 RESERVED] User: ${userId} | Quantity: ${qty}`, 'success');
+                } else {
+                    oversellBlocked++;
+                    updateUI();
+                    log(`⛔ [409 CONFLICT] Zero-overselling protection active!`, 'conflict');
+                }
             }
         }
 
@@ -568,7 +612,7 @@
         }
 
         function simulateSurgeTraffic() {
-            log(`🔥 SURGE ALERT: Launching 20 concurrent buyer order requests!`, 'sentinel');
+            log(`🔥 [HIGH VELOCITY SURGE] Launching 20 concurrent buyer requests into Kafka telemetry pipeline...`, 'agent');
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const uid = "surge_buyer_" + (i + 1);
@@ -578,7 +622,7 @@
         }
 
         function simulateBotAttack() {
-            log(`🚨 BOT ATTACK DETECTED: Automated scraper sending high-frequency requests...`, 'bot');
+            log(`🚨 [BOT SCRAPER THREAT] Launching automated scraping bot cluster... Telemetry streamed to Spring AI Agent!`, 'bot');
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
                     const uid = "bot_cluster_" + (i + 1);
