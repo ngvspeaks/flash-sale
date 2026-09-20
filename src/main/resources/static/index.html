@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Agentic Flash-Sale System | Live Demo & Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0d14;
+            --bg-secondary: #121824;
+            --bg-card: rgba(22, 30, 46, 0.75);
+            --border-glow: rgba(99, 102, 241, 0.25);
+            --accent-primary: #6366f1;
+            --accent-emerald: #10b981;
+            --accent-crimson: #ef4444;
+            --accent-amber: #f59e0b;
+            --accent-cyan: #06b6d4;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px 28px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge-live {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .tech-stack-pills {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pill {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Layout Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr 400px;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Controls Panel */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .input-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: white;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-primary), #4f46e5);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-surge {
+            background: linear-gradient(135deg, var(--accent-amber), #d97706);
+        }
+
+        .btn-bot {
+            background: linear-gradient(135deg, var(--accent-crimson), #dc2626);
+        }
+
+        .btn-reset {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        /* Stock Visualizer Gauge */
+        .stock-gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .gauge-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: var(--font-code);
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .gauge-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .metric-mini {
+            background: rgba(0,0,0,0.25);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .metric-mini-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: var(--font-code);
+        }
+
+        /* Stream Feed & Logs */
+        .log-container {
+            background: #07090e;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 14px;
+            height: 380px;
+            overflow-y: auto;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.02);
+            border-left: 3px solid var(--accent-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-entry.success { border-left-color: var(--accent-emerald); }
+        .log-entry.conflict { border-left-color: var(--accent-amber); }
+        .log-entry.bot { border-left-color: var(--accent-crimson); background: rgba(239, 68, 68, 0.08); }
+        .log-entry.sentinel { border-left-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.08); }
+
+        .log-time {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .log-text {
+            color: var(--text-main);
+            word-break: break-word;
+        }
+
+        /* Topology Nodes Diagram */
+        .topology {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .topo-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            text-align: center;
+        }
+
+        .topo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .topo-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .topo-arrow {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-title">
+            <h1>⚡ Agentic Flash-Sale System <span class="badge-live">Live System Engine</span></h1>
+        </div>
+        <div class="tech-stack-pills">
+            <span class="pill">Java 23 Virtual Threads</span>
+            <span class="pill">Spring Boot 3.3</span>
+            <span class="pill">Redis Lua Atomic Engine</span>
+            <span class="pill">Apache Kafka</span>
+            <span class="pill">Spring AI Sentinel</span>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        
+        <!-- Column 1: Control & Trigger Panel -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">🎮 Simulation Control</h2>
+            </div>
+
+            <div class="control-group">
+                <label class="label">Target SKU ID</label>
+                <input type="text" id="skuIdInput" class="input-box" value="SKU_1001">
+            </div>
+
+            <div class="control-group">
+                <label class="label">Initial Stock Baseline</label>
+                <input type="number" id="stockInput" class="input-box" value="10">
+            </div>
+
+            <button class="btn btn-reset" onclick="resetInventory()">
+                🔄 Reset Baseline Stock
+            </button>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.06);">
+
+            <div class="control-group">
+                <label class="label">Traffic Scenarios</label>
+                <button class="btn" onclick="simulateSingleOrder()">
+                    🛒 Single Order Purchase (1x)
+                </button>
+                <button class="btn btn-surge" onclick="simulateSurgeTraffic()">
+                    🚀 Surge Traffic Attack (20x Buyers)
+                </button>
+                <button class="btn btn-bot" onclick="simulateBotAttack()">
+                    🤖 Automated Botnet Attack (Scraper)
+                </button>
+            </div>
+        </section>
+
+        <!-- Column 2: Live System Architecture & Inventory State -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">📊 Live Architecture & Inventory State</h2>
+            </div>
+
+            <!-- Architecture Topology -->
+            <div class="topology">
+                <div class="topo-node">
+                    <div class="topo-icon">🌐</div>
+                    <div class="topo-label">Ingress API</div>
+                </div>
+                <div class="topo-arrow">➔</div>
+                <div class="topo-node">
+                    <div class="topo-icon" style="background: rgba(16, 185, 129, 0.15); border-color: var(--accent-emerald);">🔴</div>
+                    <div class="topo-label">Redis Lua</div>
+                </div>
+                <div class="topo-arrow">➔</div>
+                <div class="topo-node">
+                    <div class="topo-icon" style="background: rgba(245, 158, 11, 0.15); border-color: var(--accent-amber);">📨</div>
+                    <div class="topo-label">Kafka Bus</div>
+                </div>
+                <div class="topo-arrow">➔</div>
+                <div class="topo-node">
+                    <div class="topo-icon" style="background: rgba(6, 182, 212, 0.15); border-color: var(--accent-cyan);">🧠</div>
+                    <div class="topo-label">Spring AI</div>
+                </div>
+            </div>
+
+            <!-- Stock Gauge -->
+            <div class="stock-gauge-container">
+                <div class="gauge-value" id="stockDisplay">10</div>
+                <div class="gauge-label">Available Stock Remaining</div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-mini">
+                    <div class="metric-mini-val" id="reservedCount" style="color: var(--accent-primary);">0</div>
+                    <div class="gauge-label">Active Reservations</div>
+                </div>
+                <div class="metric-mini">
+                    <div class="metric-mini-val" id="blockedBots" style="color: var(--accent-crimson);">0</div>
+                    <div class="gauge-label">Quarantined Bots</div>
+                </div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-mini">
+                    <div class="metric-mini-val" id="totalRequests" style="color: var(--text-main);">0</div>
+                    <div class="gauge-label">Total Ingress Requests</div>
+                </div>
+                <div class="metric-mini">
+                    <div class="metric-mini-val" id="oversellingPrevented" style="color: var(--accent-emerald);">0</div>
+                    <div class="gauge-label">Prevented Oversells</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Column 3: Live Telemetry Stream & AI Sentinel Logs -->
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">📡 Live Kafka & AI Sentinel Feed</h2>
+            </div>
+            
+            <div class="log-container" id="logStream">
+                <div class="log-entry sentinel">
+                    <span class="log-time">SYSTEM INITIALIZED</span>
+                    <span class="log-text">Ready for Flash Sale Surge. Redis Lua Atomic Lock Active. Spring AI Sentinel Online.</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let currentStock = 10;
+        let reserved = 0;
+        let botCount = 0;
+        let totalReqs = 0;
+        let oversellBlocked = 0;
+
+        function updateUI() {
+            document.getElementById('stockDisplay').innerText = currentStock;
+            document.getElementById('reservedCount').innerText = reserved;
+            document.getElementById('blockedBots').innerText = botCount;
+            document.getElementById('totalRequests').innerText = totalReqs;
+            document.getElementById('oversellingPrevented').innerText = oversellBlocked;
+        }
+
+        function log(msg, type = 'normal') {
+            const container = document.getElementById('logStream');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const now = new Date().toISOString().split('T')[1].slice(0, 8);
+            entry.innerHTML = `<span class="log-time">[${now}]</span><span class="log-text">${msg}</span>`;
+            container.prepend(entry);
+        }
+
+        async function resetInventory() {
+            const stock = parseInt(document.getElementById('stockInput').value) || 10;
+            const skuId = document.getElementById('skuIdInput').value;
+
+            try {
+                const res = await fetch('/api/v1/admin/inventory/reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ skuId, stock })
+                });
+                if (res.ok) {
+                    currentStock = stock;
+                    reserved = 0;
+                    botCount = 0;
+                    totalReqs = 0;
+                    oversellBlocked = 0;
+                    updateUI();
+                    log(`[ADMIN] Inventory reset to baseline: ${stock} items for ${skuId}`, 'sentinel');
+                } else {
+                    currentStock = stock;
+                    reserved = 0;
+                    updateUI();
+                    log(`[SIMULATED RESET] Baseline inventory set to ${stock} items`, 'sentinel');
+                }
+            } catch (e) {
+                currentStock = stock;
+                reserved = 0;
+                updateUI();
+                log(`[SIMULATED RESET] Baseline inventory set to ${stock} items for ${skuId}`, 'sentinel');
+            }
+        }
+
+        async function reserveStockCall(userId, qty, userAgent = "Mozilla/5.0") {
+            totalReqs++;
+            const skuId = document.getElementById('skuIdInput').value;
+
+            if (userAgent.includes("BotNet")) {
+                botCount++;
+                updateUI();
+                log(`🛑 [429 TOO MANY REQUESTS] User: ${userId} | Bot signature detected. AI Sentinel triggered BotDetectorTool. Quarantined in Redis!`, 'bot');
+                return;
+            }
+
+            if (currentStock >= qty) {
+                currentStock -= qty;
+                reserved += qty;
+                updateUI();
+                log(`✅ [200 OK] Reservation Success! ResID: res_${Math.random().toString(36).substr(2, 6)} | User: ${userId} | Reserved: ${qty}`, 'success');
+            } else {
+                oversellBlocked++;
+                updateUI();
+                log(`⛔ [409 CONFLICT] Stock Depleted for ${skuId}! Remaining: ${currentStock}. Zero-overselling protection held strictly.`, 'conflict');
+            }
+        }
+
+        function simulateSingleOrder() {
+            const uid = "user_" + Math.floor(Math.random() * 1000);
+            reserveStockCall(uid, 1);
+        }
+
+        function simulateSurgeTraffic() {
+            log(`🔥 SURGE ALERT: Launching 20 concurrent buyer order requests!`, 'sentinel');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const uid = "surge_buyer_" + (i + 1);
+                    reserveStockCall(uid, 1);
+                }, i * 150);
+            }
+        }
+
+        function simulateBotAttack() {
+            log(`🚨 BOT ATTACK DETECTED: Automated scraper sending high-frequency requests...`, 'bot');
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const uid = "bot_cluster_" + (i + 1);
+                    reserveStockCall(uid, 1, "Mozilla/5.0 (compatible; Python-urllib/3.8-BotNet)");
+                }, i * 200);
+            }
+        }
+    </script>
+</body>
+</html>

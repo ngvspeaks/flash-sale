@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: flash-sale-system
+  threads:
+    virtual:
+      enabled: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 100
+          max-idle: 20
+          min-idle: 5
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: flash-sale-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:mock-key-for-sentinel}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.2
+
+flash-sale:
+  cart:
+    default-ttl-seconds: 900 # 15 minutes
+    max-per-user-limit: 2
+
+logging:
+  level:
+    com.enterprise.flashsale: DEBUG
+    org.springframework.ai: INFO
